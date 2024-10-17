@@ -34,35 +34,27 @@ def get_guild_id_from_csv():
     try:
         df = pd.read_csv(CSV_FILE)
         if not df.empty:
-            # Get the first guild_id from the file for simplicity
             return int(df.iloc[0]['guild_id'])
     except Exception as e:
         print(f"Error reading guild ID from CSV: {e}")
     return None
 
-
-# Set up logging to print errors to the console for debugging
 logging.basicConfig(level=logging.INFO)
 
 async def github_webhook(request):
     try:
-        # Log the incoming request for debugging
         logging.info("Received a request from GitHub webhook.")
 
-        # Try to parse the incoming JSON data.
         data = await request.json()
         logging.info(f"Received JSON data: {json.dumps(data, indent=2)}")
 
-        # Example: Extract a message from the incoming data (e.g., commit message)
         update_data = data.get('head_commit', {}).get('message', 'No commit message found')
         logging.info(f"Update data: {update_data}")
 
-        # Retrieve the appropriate guild_id from the CSV
         guild_id = get_guild_id_from_csv()
         logging.info(f"Using guild_id: {guild_id}")
 
         if guild_id:
-            # Post the GitHub update to the correct channel using the GitHubUpdater cog
             await bot.get_cog("GitHubUpdater").post_github_update(guild_id, update_data)
         else:
             logging.warning("No guild_id found in the CSV file.")
@@ -93,9 +85,5 @@ async def main():
     await run_app()
     await bot.start(DISCORD_BOT_TOKEN)
 
-# Run the bot using asyncio.run()
 if __name__ == "__main__":
     asyncio.run(main())
-
-
-# test
