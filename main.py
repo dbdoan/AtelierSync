@@ -29,14 +29,18 @@ async def load_cogs():
     await bot.load_extension("commands_cog")
     await bot.load_extension("github_updater_cog")
 
-def get_guild_id_from_csv():
-    """Retrieve the first available guild_id from the CSV file."""
+def get_channel_id(self, guild_id):
+    """Retrieve the channel ID for a given guild from the CSV file."""
     try:
-        df = pd.read_csv(CSV_FILE)
-        if not df.empty:
-            return int(df.iloc[0]['guild_id'])
+        df = pd.read_csv(self.csv_file)
+        # Ensure guild_id is treated as a string for comparison
+        channel_id_row = df.loc[df['guild_id'].astype(str) == str(guild_id), 'channel_id']
+        if not channel_id_row.empty:
+            return int(channel_id_row.iloc[0])
+        else:
+            print(f"No entry for guild_id {guild_id} found in the CSV file.")
     except Exception as e:
-        print(f"Error reading guild ID from CSV: {e}")
+        print(f"Error reading channel ID from CSV: {e}")
     return None
 
 logging.basicConfig(level=logging.INFO)
