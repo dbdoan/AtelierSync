@@ -38,7 +38,9 @@ class GitHubUpdater(commands.Cog):
                     f"✅ **Commit has been pushed to Main** ✅\n\n"
                     f"**User**: {user}\n\n"
                     f"**Updates**: \n{commit_message}\n"
-                    f"{commit_url}"
+                    f"{commit_url}\n"
+                    "\n"
+                    "Quick development peek: https://trello.com/invite/b/6710b55f4a2754602f1f967a/ATTI88d9ffb5fda2422e82465fd5f204991635C3EF9C/atelier-404"
                 )
 
                 await channel.send(message)
