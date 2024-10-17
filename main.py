@@ -46,6 +46,7 @@ async def github_webhook(request):
     try:
         logging.info("Received a request from GitHub webhook.")
 
+        # Parse the incoming JSON data.
         data = await request.json()
         logging.info(f"Received JSON data: {json.dumps(data, indent=2)}")
 
@@ -56,7 +57,8 @@ async def github_webhook(request):
         logging.info(f"Using guild_id: {guild_id}")
 
         if guild_id:
-            await bot.get_cog("GitHubUpdater").post_github_update(guild_id, update_data)
+            # Pass the entire data object to post_github_update
+            await bot.get_cog("GitHubUpdater").post_github_update(guild_id, data)
         else:
             logging.warning("No guild_id found in the CSV file.")
 
@@ -69,7 +71,6 @@ async def github_webhook(request):
         return web.Response(text="Internal server error", status=500)
 
     return web.Response(text="Received", status=200)
-
 
 app = web.Application()
 app.add_routes([web.post('/github-webhook', github_webhook)])
