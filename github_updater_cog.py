@@ -24,7 +24,7 @@ class GitHubUpdater(commands.Cog):
             print(f"Error reading channel ID from CSV: {e}")
         return None
 
-    async def post_github_update(self, guild_id, data):
+    async def post_github_update(self, guild_id, data, branch):
         """Post a formatted update to the specified guild's channel."""
         channel_id = self.get_channel_id(guild_id)
         if channel_id:
@@ -35,7 +35,7 @@ class GitHubUpdater(commands.Cog):
                 commit_url = data.get('head_commit', {}).get('url', 'No URL provided')
 
                 message = (
-                    f"✅ **Commit has been pushed to Main** ✅\n\n"
+                    f"✅ **An update has been pushed to {branch.capitalize()}** ✅\n\n"
                     f"**User**: {user}\n\n"
                     f"**Updates**: \n{commit_message}\n"
                     "# /////////// /////////// /////////// #\n"
@@ -51,6 +51,7 @@ class GitHubUpdater(commands.Cog):
                 print(f"Channel with ID {channel_id} not found!")
         else:
             print(f"No channel ID set for guild {guild_id}.")
+
 
 async def setup(bot):
     await bot.add_cog(GitHubUpdater(bot))

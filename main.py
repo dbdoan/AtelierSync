@@ -9,7 +9,7 @@ from my_keys import bot_token
 
 from os import system
 
-system('clear')#test
+system('clear')
 
 # /////////// /////////// ///////////
 DISCORD_BOT_TOKEN = bot_token
@@ -45,9 +45,12 @@ async def github_webhook(request):
     try:
         logging.info("Received a request from GitHub webhook.")
 
-        # Parse the incoming JSON data.
         data = await request.json()
         logging.info(f"Received JSON data: {json.dumps(data, indent=2)}")
+
+        ref = data.get('ref', '')
+        branch = ref.split('/')[-1] if 'refs/heads/' in ref else 'Unknown branch'
+        logging.info(f"Detected branch: {branch}")
 
         update_data = data.get('head_commit', {}).get('message', 'No commit message found')
         logging.info(f"Update data: {update_data}")
@@ -56,7 +59,7 @@ async def github_webhook(request):
         logging.info(f"Using guild_id: {guild_id}")
 
         if guild_id:
-            await bot.get_cog("GitHubUpdater").post_github_update(guild_id, data)
+            await bot.get_cog("GitHubUpdater").post_github_update(guild_id, data, branch)
         else:
             logging.warning("No guild_id found in the CSV file.")
 
