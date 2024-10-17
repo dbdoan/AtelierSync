@@ -20,7 +20,6 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Load the Cog(s)
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}')
@@ -57,7 +56,6 @@ async def github_webhook(request):
         logging.info(f"Using guild_id: {guild_id}")
 
         if guild_id:
-            # Pass the entire data object to post_github_update
             await bot.get_cog("GitHubUpdater").post_github_update(guild_id, data)
         else:
             logging.warning("No guild_id found in the CSV file.")

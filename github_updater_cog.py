@@ -1,4 +1,3 @@
-import discord
 from discord.ext import commands
 import pandas as pd
 
@@ -15,7 +14,6 @@ class GitHubUpdater(commands.Cog):
         """Retrieve the channel ID for a given guild from the CSV file."""
         try:
             df = pd.read_csv(self.csv_file)
-            # Ensure guild_id is treated as a string for comparison
             channel_id_row = df.loc[df['guild_id'].astype(str) == str(guild_id), 'channel_id']
             if not channel_id_row.empty:
                 print(f"Found channel_id {channel_id_row.iloc[0]} for guild_id {guild_id}")
@@ -32,12 +30,10 @@ class GitHubUpdater(commands.Cog):
         if channel_id:
             channel = self.bot.get_channel(channel_id)
             if channel:
-                # Extract details from the data
                 user = data.get('pusher', {}).get('name', 'Unknown user')
                 commit_message = data.get('head_commit', {}).get('message', 'No commit message found')
                 commit_url = data.get('head_commit', {}).get('url', 'No URL provided')
 
-                # Format the message
                 message = (
                     f"✅ **Commit has been pushed to Main** ✅\n\n"
                     f"**User**: {user}\n\n"
@@ -45,7 +41,6 @@ class GitHubUpdater(commands.Cog):
                     f"{commit_url}"
                 )
 
-                # Send the message to the channel
                 await channel.send(message)
                 print(f"Sent update to channel {channel_id} for guild {guild_id}.")
             else:
