@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import pandas as pd
 
 class GitHubUpdater(commands.Cog):
     def __init__(self, bot):
@@ -12,23 +13,41 @@ class GitHubUpdater(commands.Cog):
 
     def get_channel_id(self, guild_id):
         """Retrieve the channel ID for a given guild from the CSV file."""
-        pass
+        try:
+            df = pd.read_csv(self.csv_file)
+            # Ensure guild_id is treated as a string for comparison
+            channel_id_row = df.loc[df['guild_id'].astype(str) == str(guild_id), 'channel_id']
+            if not channel_id_row.empty:
+                print(f"Found channel_id {channel_id_row.iloc[0]} for guild_id {guild_id}")
+                return int(channel_id_row.iloc[0])
+            else:
+                print(f"No entry for guild_id {guild_id} found in the CSV file.")
+        except Exception as e:
+            print(f"Error reading channel ID from CSV: {e}")
+        return None
 
     async def post_github_update(self, guild_id, data):
+        """Post a formatted update to the specified guild's channel."""
         channel_id = self.get_channel_id(guild_id)
         if channel_id:
             channel = self.bot.get_channel(channel_id)
             if channel:
+                # Extract details from the data
                 user = data.get('pusher', {}).get('name', 'Unknown user')
-                commit_message = data.get('head_commit', {}).get('message', 'No summary provided')
-                commit_description = data.get('head_commit', {}).get('url', 'No URL provided')
+                commit_message = data.get('head_commit', {}).get('message', 'No commit message found')
+                commit_url = data.get('head_commit', {}).get('url', 'No URL provided')
 
+                # Format the message
                 message = (
-                    "✅ **Commit has been pushed to Main** ✅\n\n"
+                    f"✅ **Commit has been pushed to Main** ✅\n\n"
                     f"**User**: {user}\n\n"
-                    f"**Updates**: \n{commit_message}\n{commit_description}"
+                    f"**Updates**: \n{commit_message}\n"
+                    f"{commit_url}"
                 )
+
+                # Send the message to the channel
                 await channel.send(message)
+                print(f"Sent update to channel {channel_id} for guild {guild_id}.")
             else:
                 print(f"Channel with ID {channel_id} not found!")
         else:

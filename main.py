@@ -30,10 +30,11 @@ async def load_cogs():
     await bot.load_extension("github_updater_cog")
 
 def get_guild_id_from_csv():
-    """Retrieve the first available guild_id from the CSV file."""
+    """Retrieve the appropriate guild_id from the CSV file based on criteria."""
     try:
         df = pd.read_csv(CSV_FILE)
         if not df.empty:
+            print(f"Loaded CSV data:\n{df}")
             return int(df.iloc[0]['guild_id'])
     except Exception as e:
         print(f"Error reading guild ID from CSV: {e}")
