@@ -38,7 +38,7 @@ class GitHubUpdater(commands.Cog):
                     f"✅ **Commit has been pushed to Main** ✅\n\n"
                     f"**User**: {user}\n\n"
                     f"**Updates**: \n{commit_message}\n"
-                    "////////// /////////// ///////////\n"
+                    "# /////////// /////////// /////////// #\n"
                     "\n"
                     f"Github Update: {commit_url}\n"
                     "\n"
