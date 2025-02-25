@@ -25,33 +25,36 @@ class GitHubUpdater(commands.Cog):
         return None
 
     async def post_github_update(self, guild_id, data, branch):
-        """Post a formatted update to the specified guild's channel."""
+        """Post a formatted update to the specified guild's channel, only if it's pushed to the main branch."""
+        # Since we already filtered out non-main branches, proceed directly.
         channel_id = self.get_channel_id(guild_id)
         if channel_id:
             channel = self.bot.get_channel(channel_id)
             if channel:
+                # Extract details from the data
                 user = data.get('pusher', {}).get('name', 'Unknown user')
                 commit_message = data.get('head_commit', {}).get('message', 'No commit message found')
                 commit_url = data.get('head_commit', {}).get('url', 'No URL provided')
 
+                # Format the message
                 message = (
-                    f"✅ **An update has been pushed to {branch.capitalize()}** ✅\n\n"
-                    f"**User**: {user}\n\n"
-                    f"**Updates**: \n{commit_message}\n"
-                    "# /////////// /////////// /////////// #\n"
+                    f"✅ **An update has been pushed to main** ✅\n\n"
+                    f"**Pushed by**: {user}\n\n"
+                    f"**Update**: \n{commit_message}\n"
                     "\n"
-                    f"Github Update: {commit_url}\n"
+                    "< ==================================== >\n"
+                    f"**Github Update**: {commit_url}\n"
                     "\n"
-                    "Quick development view: <https://trello.com/invite/b/6710b55f4a2754602f1f967a/ATTI88d9ffb5fda2422e82465fd5f204991635C3EF9C/atelier-404>"
+                    "**Tasks list**: <https://tinyurl.com/g-docs-tasks>"
                 )
 
+                # Send the message to the channel
                 await channel.send(message)
                 print(f"Sent update to channel {channel_id} for guild {guild_id}.")
             else:
                 print(f"Channel with ID {channel_id} not found!")
         else:
             print(f"No channel ID set for guild {guild_id}.")
-
 
 async def setup(bot):
     await bot.add_cog(GitHubUpdater(bot))

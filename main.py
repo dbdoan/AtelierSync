@@ -45,20 +45,30 @@ async def github_webhook(request):
     try:
         logging.info("Received a request from GitHub webhook.")
 
+        # Parse the incoming JSON data.
         data = await request.json()
         logging.info(f"Received JSON data: {json.dumps(data, indent=2)}")
 
+        # Extract the branch name from the 'ref' field.
         ref = data.get('ref', '')
         branch = ref.split('/')[-1] if 'refs/heads/' in ref else 'Unknown branch'
         logging.info(f"Detected branch: {branch}")
 
+        # Check if the branch is 'main'
+        if branch.lower() != "main":
+            logging.info(f"Branch '{branch}' is not 'main'. Skipping notification.")
+            return web.Response(text="Branch is not main, no notification sent.", status=200)
+
+        # Get commit message and other details.
         update_data = data.get('head_commit', {}).get('message', 'No commit message found')
         logging.info(f"Update data: {update_data}")
 
+        # Retrieve the guild ID for the Discord server.
         guild_id = get_guild_id_from_csv()
         logging.info(f"Using guild_id: {guild_id}")
 
         if guild_id:
+            # Send the data to the GitHubUpdater cog for further processing.
             await bot.get_cog("GitHubUpdater").post_github_update(guild_id, data, branch)
         else:
             logging.warning("No guild_id found in the CSV file.")
