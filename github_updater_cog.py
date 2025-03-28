@@ -45,7 +45,7 @@ class GitHubUpdater(commands.Cog):
                     "< ==================================== >\n"
                     f"**Github Update**: {commit_url}\n"
                     "\n"
-                    "**Tasks list**: <https://tinyurl.com/g-docs-tasks>"
+                    "**Tasks**: <https://tinyurl.com/g-docs-tasks>"
                 )
 
                 # Send the message to the channel
