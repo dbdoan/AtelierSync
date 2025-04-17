@@ -1,4 +1,4 @@
-# Atelier Update Notifier
+# Game-Development Update Notifier
 
 ## About
 A Discord bot designed to support my game development team by automatically posting updates whenever a new change is pushed to GitHub. This ensures that all team members stay informed and aligned throughout the development process.
