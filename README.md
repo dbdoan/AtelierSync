@@ -19,4 +19,4 @@ A Discord bot designed to support my game development team by automatically post
 
 ## Preview
 <!-- Resize image to 500px wide -->
-<img src="https://i.ibb.co/2YkcRzc2/example2.png" alt="Preview of bot usage." width="300" height="auto">
+<img src="https://i.ibb.co/8L8kLZ0D/New-Project.png" alt="Preview of bot usage." width="auto" height="auto">
