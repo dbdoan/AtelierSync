@@ -2,7 +2,7 @@
 
 ## Preview
 <!-- Resize image to 500px wide -->
-<img src="https://i.ibb.co/8L8kLZ0D/New-Project.png" alt="Preview of bot usage." width="auto" height="auto">
+<img src="https://i.ibb.co/8L8kLZ0D/New-Project.png" alt="Preview of the Atelier bot." width="auto" height="auto">
 
 ## About
 A Discord bot designed to support my game development team by automatically posting updates whenever a new change is pushed to GitHub. This ensures that all team members stay informed and aligned throughout the development process.
